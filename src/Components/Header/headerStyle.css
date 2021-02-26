@@ -1,0 +1,48 @@
+.header-container{
+    display: flex;
+    position: relative;
+    width: auto;
+    height: 10vh;
+    background-color: #F9FAFE;
+    padding: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.logo{
+    display: flex;
+    align-self: center;
+    width: 30%;
+    height:auto;
+}
+
+.sign-in-out{
+    display: flex;
+    align-self: center;
+    justify-content: flex-end;
+    width: 70%;
+    height: auto;
+}
+
+.sign-in-button{
+    width: 100px;
+    height: 35px;
+    border-radius: 8px;
+    background-color: transparent;
+    border-color:transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+.sign-up-button{
+    width: 100px;
+    height: 35px;
+    border-radius: 8px;
+    background-color: black;
+    border-color: black;
+    color: white;
+    outline: none;
+    cursor: pointer;
+}

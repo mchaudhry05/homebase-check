@@ -1,0 +1,42 @@
+.home-container{
+    display: flex;
+    position: relative;
+    margin-top: -5vh;
+    height: fit-content;
+    background-color: #F9FAFE;
+    padding: 10px;
+    padding-left: 50px;
+    box-sizing: border-box;
+    z-index: 0;
+}
+
+.tagline{
+    display: block;
+    align-self: center;
+    width: auto;
+    height: fit-content;
+}
+
+.tagline h1{
+    display: flex;
+    align-self: center;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-size: 5vw;
+}
+
+.image-container{
+    display: flex;
+    width: 100%;
+    margin-right: 0px;
+    height: fit-content;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 999;
+}
+
+.image-container img{
+    margin-right: -10px;
+    max-height: 90%;
+    max-width: 90%;
+}
