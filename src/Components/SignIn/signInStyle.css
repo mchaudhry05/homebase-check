@@ -1,54 +1,62 @@
-.sign-in-container{
-    display: flex;
-    width: 100%;
-    height: 90vh;
-    background: linear-gradient(270.4deg, #7581FF 22.61%, #8994FF 44.47%, #A0AAFF 67.81%, #A2ADFF 86.7%), #9DA8FF;
-    z-index: 0;
+.sign-in-container {
+  display: flex;
+  width: 100%;
+  height: 90vh;
+  background: linear-gradient(
+      270.4deg,
+      #7581ff 22.61%,
+      #8994ff 44.47%,
+      #a0aaff 67.81%,
+      #a2adff 86.7%
+    ),
+    #9da8ff;
+  z-index: 0;
 }
 
-.form-container{
-    display: block;
-    width: 320px;
-    height: 400px;
-    border-radius: 30px;
-    position: relative;
-    margin:auto;
-    justify-content: center;
-    z-index: 1;
-    padding: 20px;
+.form-container {
+  display: block;
+  width: 320px;
+  height: 400px;
+  border-radius: 30px;
+  position: relative;
+  margin: auto;
+  justify-content: center;
+  z-index: 1;
+  padding: 20px;
 }
 
-.form-container h2{
-    margin-left: 15px;
-    margin-top: 10px;
+.form-container h2 {
+  margin-left: 15px;
+  margin-top: 10px;
 }
 
-form{
-    margin-top: 40px;
-    margin-left: 10px;
+form {
+  margin-top: 40px;
+  margin-left: 10px;
 }
 
-input[type=text], [type=password]{
-    width: 280px;
-    height: 45px;
-    border: white 2px; 
-    border-radius: 15px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding-left: 20px;
-    outline: none !important;
-    box-shadow: 2px 2px 5px grey;
+input[type="text"],
+[type="password"] {
+  width: 280px;
+  height: 45px;
+  border: white 2px;
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-left: 20px;
+  outline: none !important;
+  box-shadow: 2px 2px 5px grey;
 }
 
-.sign-on-button{
-    width: 290px; 
-    height: 45px;
-    background-color: black;
-    color: white;
-    border-color: black;
-    border-radius: 15px;
-    margin-top: 10px;
-    margin-left: 3px;
-    outline: none;
-    cursor: pointer;
+.sign-on-button {
+  width: 290px;
+  height: 45px;
+  background-color: black;
+  color: white;
+  border-color: black;
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-left: 3px;
+  outline: none;
+  cursor: pointer;
 }

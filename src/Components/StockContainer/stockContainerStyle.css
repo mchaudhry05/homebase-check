@@ -1,0 +1,21 @@
+.stock-container {
+  display: block;
+  margin: 25px;
+}
+
+.stock {
+  width: auto;
+  height: 70px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  outline: none !important;
+  border: white 2px;
+  box-shadow: 2px 2px 5px grey;
+  background-color: white;
+}
+
+.padding {
+  height: 20px;
+  margin-bottom: 100px;
+}

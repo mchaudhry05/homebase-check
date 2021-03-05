@@ -1,0 +1,61 @@
+.stock {
+  display: flex;
+  padding: 10px;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+.logo-img-container {
+  width: fit-content;
+  height: fit-content;
+  justify-self: flex-start;
+}
+
+.logo-img {
+  width: 50px;
+  height: 50px;
+}
+
+.company-name-container {
+  display: flex;
+  width: 60%;
+  height: auto;
+  text-align: left;
+  margin-left: 5%;
+  background-color: white;
+}
+
+.company-name {
+  align-self: center;
+  background-color: white;
+  font-size: 2vw;
+}
+
+.current-price-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 35%;
+  height: auto;
+  margin-left: 5%;
+  text-align: right;
+  background-color: white;
+}
+
+.current-price {
+  width: fit-content;
+  color: white;
+  align-self: center;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background-color: black;
+  margin-right: 10%;
+}
+
+@media screen and (max-width: 900px) {
+  .company-name {
+    align-self: center;
+    background-color: white;
+    font-size: 3vw;
+  }
+}
