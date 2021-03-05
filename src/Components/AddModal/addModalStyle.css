@@ -199,6 +199,7 @@ input[type="date"] {
 }
 
 .add-stock {
+  display: block;
   width: 290px;
   height: 45px;
   background-color: black;
@@ -207,6 +208,7 @@ input[type="date"] {
   border-radius: 15px;
   margin-top: 10px;
   margin-bottom: 20px;
+  margin: auto;
   outline: none;
   cursor: pointer;
 }
@@ -303,6 +305,6 @@ input[type="date"] {
   }
 }
 
-form {
+#add-form {
   background-color: white;
 }

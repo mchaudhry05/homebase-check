@@ -55,12 +55,9 @@ const AddModal = ({ closeModal }) => {
    * provided by the user
    */
   useEffect(() => {
-    console.log(document.getElementsByClassName("ticker-symbol")[0].value);
-    const tickerSymbolValue = document.getElementsByClassName(
-      "ticker-symbol"
-    )[0].value;
-    setTickerSymbol(tickerSymbolValue);
+    //console.log(document.getElementsByClassName("ticker-symbol")[0].value);
     setData();
+    console.log(tickerSymbol)
     if (tickerSymbol !== "") {
       const options = {
         method: "GET",
@@ -95,18 +92,22 @@ const AddModal = ({ closeModal }) => {
    */
   const addStocks = (e) => {
     e.preventDefault();
+    let tickerSymbolValue = document.getElementsByClassName("ticker-symbol")[0].value.trim().toUpperCase();
+    setTickerSymbol(tickerSymbolValue)
+
     setLoading(true);
     if (data) {
       console.log(data);
       setMessage("The stock was added!");
-      //setStockURL(data.assetProfile.website);
-      //setSector(data.assetProfile.sector);
-      setLoading(false);
+      setStockURL(data.assetProfile.website);
+      setSector(data.assetProfile.sector);
+     
       updatePortfolio(
         data.quoteType.shortName,
         data.assetProfile.website,
         data.assetProfile.sector
       );
+      setLoading(false);
     } else {
       setMessage("Please check the ticker symbol you provided!");
       setLoading(false);
@@ -130,9 +131,8 @@ const AddModal = ({ closeModal }) => {
    * @param {String} companySector is the sector within which the company is in
    */
   const updatePortfolio = (companyName, companyWebsite, companySector) => {
-    if (!newStock && !stock.get("id")) {
-      setMessage("You don't own this stock!");
-    } else if (!newStock || stock.get("id")) {
+    console.log("here")
+    if (!newStock) {
       transact([
         {
           stock: {
@@ -175,7 +175,7 @@ const AddModal = ({ closeModal }) => {
         <div className="message">
           <p className="label">{message}</p>
         </div>
-        <form onSubmit={addStocks}>
+        <form id="add-form" onSubmit={e =>{e.preventDefault()}}>
           <div className="toggle-holder">
             <h2 className="label">New Stock</h2>
             <label className="switch">
@@ -241,17 +241,19 @@ const AddModal = ({ closeModal }) => {
                 ></input>
               </div>
             </div>
-            <input
+          </div>
+          <input
               className="add-stock"
               style={
                 showLoading ? { cursor: "not-allowed" } : { cursor: "pointer" }
               }
               type="submit"
+              
+              onClick={addStocks}
             >
               {/* {showLoading ? "LOADING" : "UPDATE"} */}
             </input>
-          </div>
-        </form>
+          </form>
       </div>
     </div>
   );
