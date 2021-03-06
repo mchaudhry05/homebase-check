@@ -11,58 +11,42 @@ import axios from "axios";
  * set to allow the user to open and close the
  * AddModal
  */
-const AddModal = ({ closeModal }) => {
-  const [tickerSymbol, setTickerSymbol] = useState("");
-  const [numberOfShares, setNumberOfShares] = useState("");
-  const [buyPrice, setBuyPrice] = useState("");
+const AddModal = ({ closeModal }) => { 
+
+  const [tickerSymbol, setTickerSymbol] = useState(""); 
+  const [shares, setShares] = useState(0); 
+  const [buyPrice, setBuyPrice] = useState(0); 
   const [buyDate, setBuyDate] = useState("");
-  const [newStock, setNewStock] = useState(true);
-  const [stockURL, setStockURL] = useState("");
-  const [sector, setSector] = useState("");
-  const [showLoading, setLoading] = useState(false);
+  const [newStock, setNewStock] = useState(true); 
   const [message, setMessage] = useState("");
-  const [change, setChange] = useState(false);
-  const [data, setData] = useState();
+  const [data, setData] = useState({});
 
-  /**
-   * This function updates the state by reading
-   * the user inputs for the stock information
-   * @param {Event} e is the event that triggered
-   * the function call
-   */
-  const updateState = (e) => {
-    const { value, name } = e.target;
-    setChange(!change);
-    if (name !== "") {
-      if (name === "ticker-symbol") {
-        setTickerSymbol(value.toUpperCase().trim());
-      } else if (name === "#-of-shares") {
-        setNumberOfShares(value.toUpperCase().trim());
-      } else if (name === "buy-price") {
-        setBuyPrice(value.toUpperCase().trim());
-      } else if (name === "buy-date") {
-        setBuyDate(value.toUpperCase().trim());
-      } else if (name === "new-stock") {
-        setNewStock(!newStock);
-        console.log(newStock);
-      }
-    }
-  };
+  const updateTickerSymbol = e => {
+    setTickerSymbol(e.target.value); 
+  }
 
-  /**
-   * useEffect is being used to make an API call to the
-   * Yahoo Finance API based on the Ticker Symbol
-   * provided by the user
-   */
-  useEffect(() => {
-    //console.log(document.getElementsByClassName("ticker-symbol")[0].value);
-    setData();
-    console.log(tickerSymbol)
+  const updateShares = e => {
+    setShares(e.target.value); 
+  }
+
+  const updateBuyPrice = e => {
+    setBuyPrice(e.target.value); 
+  }
+
+  const updateBuyDate = e => {
+    setBuyDate(e.target.value); 
+  }
+
+  const updateNewStock = e => {
+    setNewStock(!newStock); 
+  }
+
+const fetchData = () => {
     if (tickerSymbol !== "") {
       const options = {
         method: "GET",
         url:
-          "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-profile",
+          "https://1apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-profile",
         params: { symbol: tickerSymbol, region: "US" },
         headers: {
           "x-rapidapi-key":
@@ -70,80 +54,69 @@ const AddModal = ({ closeModal }) => {
           "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
         },
       };
-
+  
       axios
         .request(options)
         .then(function (response) {
           console.log(response.data);
-          let data = response.data;
-          setData(data);
+          setData(response.data);
+
+          updatePortfolio(
+            response.data.quoteType.shortName,
+            response.data.assetProfile.website,
+            response.data.assetProfile.sector
+          )
+         
         })
-        .catch(function (error) {});
+        .catch(function (error) {
+          setInterval(()=> {setMessage("Invalid Ticker Symbol!")}, 3000);
+          setMessage("");
+          console.log(error)
+        });
     }
-  }, [tickerSymbol, setTickerSymbol]);
+  }
 
-  /**
-   * addStocks is the function that makes sure
-   * to grab the information returned from the
-   * API and calls updatePortfolio to have
-   * all the information added to the portfolio
-   * @param {Event} e is the event that triggered
-   * the function call
-   */
-  const addStocks = (e) => {
-    e.preventDefault();
-    let tickerSymbolValue = document.getElementsByClassName("ticker-symbol")[0].value.trim().toUpperCase();
-    setTickerSymbol(tickerSymbolValue)
-
-    setLoading(true);
-    if (data) {
-      console.log(data);
-      setMessage("The stock was added!");
-      setStockURL(data.assetProfile.website);
-      setSector(data.assetProfile.sector);
-     
-      updatePortfolio(
-        data.quoteType.shortName,
-        data.assetProfile.website,
-        data.assetProfile.sector
-      );
-      setLoading(false);
-    } else {
-      setMessage("Please check the ticker symbol you provided!");
-      setLoading(false);
-    }
-    setTimeout(() => {
-      setMessage("");
-    }, 3000);
-  };
+  const addStock = e =>{
+    e.preventDefault(); 
+    setMessage("Adding ...")
+    fetchData();
+  }
 
   const [currentUser] = useEntity({ identity: "currentUser" });
+  const [stocks] = useQuery({
+    $find: 'stock',
+    $where: { stock: { user: currentUser.get("id") } }
+  }); 
 
-  const [stock] = useEntity({ stock: { tickerSymbol: tickerSymbol } });
+  
+  //console.log(stocks)
+  //const [stock] = useEntity({ stock: { tickerSymbol: tickerSymbol } });
+  //console.log(stock.get("id")); 
+  //console.log(newStock)
 
   const [transact] = useTransact();
 
-  /**
-   * This function uses the transact API call from Homebase to communicate with
-   * the Firebase backend and store all of the information inside of the database
-   * @param {String} companyName is the name of the company
-   * @param {String} companyWebsite is the URL of the company's website
-   * @param {String} companySector is the sector within which the company is in
-   */
   const updatePortfolio = (companyName, companyWebsite, companySector) => {
-    console.log("here")
+    let stock;
+    for(let i = 0; i < stocks.length; i++){
+      if(stocks[i].get("tickerSymbol") === tickerSymbol){
+        stock = stocks[i]; 
+        break;
+      }
+    }
     if (!newStock) {
+      
       transact([
         {
           stock: {
             id: stock.get("id"),
             shares:
-              parseFloat(stock.get("shares")) + parseFloat(numberOfShares),
+              parseFloat(stock.get("shares")) + parseFloat(shares),
             buyPrice:
               (parseFloat(stock.get("buyPrice")) *
                 parseFloat(stock.get("shares")) +
-                parseFloat(buyPrice) * parseFloat(numberOfShares)) /
-              (parseFloat(stock.get("shares")) + parseFloat(numberOfShares)),
+                parseFloat(buyPrice) * parseFloat(shares)) /
+              (parseFloat(stock.get("shares")) + parseFloat(shares)),
           },
         },
       ]);
@@ -153,7 +126,7 @@ const AddModal = ({ closeModal }) => {
           stock: {
             user: currentUser.get("id"),
             tickerSymbol: tickerSymbol,
-            shares: parseFloat(numberOfShares),
+            shares: parseFloat(shares),
             buyPrice: parseFloat(buyPrice),
             buyDate: buyDate,
             website: companyWebsite ? companyWebsite : "",
@@ -163,7 +136,11 @@ const AddModal = ({ closeModal }) => {
         },
       ]);
     }
+
+    setInterval(()=> {setMessage("Succesfully Added!")}, 3000);
+    setMessage("");
   };
+  
 
   return (
     <div className="add-modal-container">
@@ -175,14 +152,14 @@ const AddModal = ({ closeModal }) => {
         <div className="message">
           <p className="label">{message}</p>
         </div>
-        <form id="add-form" onSubmit={e =>{e.preventDefault()}}>
+        <form id="add-form" onSubmit={addStock}>
           <div className="toggle-holder">
             <h2 className="label">New Stock</h2>
             <label className="switch">
               <input
                 type="checkbox"
                 name="new-stock"
-                onClick={updateState}
+                onClick={updateNewStock}
               ></input>
               <span className="slider round"></span>
             </label>
@@ -198,7 +175,7 @@ const AddModal = ({ closeModal }) => {
                   type="text"
                   name="ticker-symbol"
                   id="stock-info"
-                  onChange={updateState}
+                  onChange={updateTickerSymbol}
                   required
                 ></input>
               </div>
@@ -210,7 +187,7 @@ const AddModal = ({ closeModal }) => {
                   type="number"
                   name="#-of-shares"
                   id="stock-info-3"
-                  onChange={updateState}
+                  onChange={updateShares}
                   required
                 ></input>
               </div>
@@ -224,7 +201,7 @@ const AddModal = ({ closeModal }) => {
                   type="number"
                   name="buy-price"
                   id="stock-info-2"
-                  onChange={updateState}
+                  onChange={updateBuyPrice}
                   step="0.01"
                   required
                 ></input>
@@ -236,7 +213,7 @@ const AddModal = ({ closeModal }) => {
                   className="buy-date"
                   type="date"
                   name="buy-date"
-                  onChange={updateState}
+                  onChange={updateBuyDate}
                   required
                 ></input>
               </div>
@@ -245,11 +222,11 @@ const AddModal = ({ closeModal }) => {
           <input
               className="add-stock"
               style={
-                showLoading ? { cursor: "not-allowed" } : { cursor: "pointer" }
+                {cursor: "pointer"}
+                // showLoading ? { cursor: "not-allowed" } : { cursor: "pointer" }
               }
               type="submit"
-              
-              onClick={addStocks}
+              onSubmit={addStock}
             >
               {/* {showLoading ? "LOADING" : "UPDATE"} */}
             </input>
