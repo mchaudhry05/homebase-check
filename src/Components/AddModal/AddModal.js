@@ -11,37 +11,36 @@ import axios from "axios";
  * set to allow the user to open and close the
  * AddModal
  */
-const AddModal = ({ closeModal }) => { 
-
-  const [tickerSymbol, setTickerSymbol] = useState(""); 
-  const [shares, setShares] = useState(0); 
-  const [buyPrice, setBuyPrice] = useState(0); 
+const AddModal = ({ closeModal }) => {
+  const [tickerSymbol, setTickerSymbol] = useState("");
+  const [shares, setShares] = useState(0);
+  const [buyPrice, setBuyPrice] = useState(0);
   const [buyDate, setBuyDate] = useState("");
-  const [newStock, setNewStock] = useState(true); 
+  const [newStock, setNewStock] = useState(true);
   const [message, setMessage] = useState("");
   const [data, setData] = useState({});
 
-  const updateTickerSymbol = e => {
-    setTickerSymbol(e.target.value); 
-  }
+  const updateTickerSymbol = (e) => {
+    setTickerSymbol(e.target.value);
+  };
 
-  const updateShares = e => {
-    setShares(e.target.value); 
-  }
+  const updateShares = (e) => {
+    setShares(e.target.value);
+  };
 
-  const updateBuyPrice = e => {
-    setBuyPrice(e.target.value); 
-  }
+  const updateBuyPrice = (e) => {
+    setBuyPrice(e.target.value);
+  };
 
-  const updateBuyDate = e => {
-    setBuyDate(e.target.value); 
-  }
+  const updateBuyDate = (e) => {
+    setBuyDate(e.target.value);
+  };
 
-  const updateNewStock = e => {
-    setNewStock(!newStock); 
-  }
+  const updateNewStock = (e) => {
+    setNewStock(!newStock);
+  };
 
-const fetchData = () => {
+  const fetchData = () => {
     if (tickerSymbol !== "") {
       const options = {
         method: "GET",
@@ -54,7 +53,7 @@ const fetchData = () => {
           "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
         },
       };
-  
+
       axios
         .request(options)
         .then(function (response) {
@@ -65,53 +64,51 @@ const fetchData = () => {
             response.data.quoteType.shortName,
             response.data.assetProfile.website,
             response.data.assetProfile.sector
-          )
-         
+          );
         })
         .catch(function (error) {
-          setInterval(()=> {setMessage("Invalid Ticker Symbol!")}, 3000);
-          setMessage("");
-          console.log(error)
+          setMessage("Invalid Ticker Symbol!");
+          setTimeout(() => {
+            setMessage("");
+          }, 3000);
+          console.log(error);
         });
     }
-  }
+  };
 
-  const addStock = e =>{
-    e.preventDefault(); 
-    setMessage("Adding ...")
+  const addStock = (e) => {
+    e.preventDefault();
+    setMessage("Adding ...");
     fetchData();
-  }
+  };
 
   const [currentUser] = useEntity({ identity: "currentUser" });
   const [stocks] = useQuery({
-    $find: 'stock',
-    $where: { stock: { user: currentUser.get("id") } }
-  }); 
+    $find: "stock",
+    $where: { stock: { user: currentUser.get("id") } },
+  });
 
-  
   //console.log(stocks)
   //const [stock] = useEntity({ stock: { tickerSymbol: tickerSymbol } });
-  //console.log(stock.get("id")); 
+  //console.log(stock.get("id"));
   //console.log(newStock)
 
   const [transact] = useTransact();
 
   const updatePortfolio = (companyName, companyWebsite, companySector) => {
     let stock;
-    for(let i = 0; i < stocks.length; i++){
-      if(stocks[i].get("tickerSymbol") === tickerSymbol){
-        stock = stocks[i]; 
+    for (let i = 0; i < stocks.length; i++) {
+      if (stocks[i].get("tickerSymbol") === tickerSymbol) {
+        stock = stocks[i];
         break;
       }
     }
     if (!newStock) {
-      
       transact([
         {
           stock: {
             id: stock.get("id"),
-            shares:
-              parseFloat(stock.get("shares")) + parseFloat(shares),
+            shares: parseFloat(stock.get("shares")) + parseFloat(shares),
             buyPrice:
               (parseFloat(stock.get("buyPrice")) *
                 parseFloat(stock.get("shares")) +
@@ -137,10 +134,12 @@ const fetchData = () => {
       ]);
     }
 
-    setInterval(()=> {setMessage("Succesfully Added!")}, 3000);
-    setMessage("");
+    setMessage("Succesfully Added!");
+
+    setTimeout(() => {
+      setMessage("");
+    }, 3000);
   };
-  
 
   return (
     <div className="add-modal-container">
@@ -220,17 +219,17 @@ const fetchData = () => {
             </div>
           </div>
           <input
-              className="add-stock"
-              style={
-                {cursor: "pointer"}
-                // showLoading ? { cursor: "not-allowed" } : { cursor: "pointer" }
-              }
-              type="submit"
-              onSubmit={addStock}
-            >
-              {/* {showLoading ? "LOADING" : "UPDATE"} */}
-            </input>
-          </form>
+            className="add-stock"
+            style={
+              { cursor: "pointer" }
+              // showLoading ? { cursor: "not-allowed" } : { cursor: "pointer" }
+            }
+            type="submit"
+            onSubmit={addStock}
+          >
+            {/* {showLoading ? "LOADING" : "UPDATE"} */}
+          </input>
+        </form>
       </div>
     </div>
   );
