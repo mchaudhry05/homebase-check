@@ -11,13 +11,14 @@ import Stock from "../Stock/Stock";
  */
 const StockContainer = () => {
   const [stocksFound, setStocks] = useState([]);
+  const [listOfStockPrices, setListOfStockPrices] = useState([]);
+  const [stockPrices, setStockPrices] = useState([]);
+
   const [currentUser] = useEntity({ identity: "currentUser" });
   const [stocks] = useQuery({
     $find: "stock",
     $where: { stock: { user: currentUser.get("id") } },
   });
-  const [listOfStockPrices, setListOfStockPrices] = useState([]);
-  const [stockPrices, setStockPrices] = useState([]);
 
   /**
    * useEffect is used here to set the the state of the component
@@ -76,9 +77,8 @@ const StockContainer = () => {
     let stockPrices = [];
     stockQuotes.map((stock) => {
       let stockPriceChanges = [];
-
       stockPriceChanges.push(stock.ask);
-      stockPriceChanges.push(stock.preMarketPrice);
+      stockPriceChanges.push(stock.regularMarketPreviousClose);
       stockPrices.push(stockPriceChanges);
       stockPriceChanges = [];
     });

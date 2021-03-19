@@ -40,6 +40,10 @@ const AddModal = ({ closeModal }) => {
     setNewStock(!newStock);
   };
 
+  /**
+   * fetchData makes an API call to get information 
+   * about the stock the user entered
+   */
   const fetchData = () => {
     if (tickerSymbol !== "") {
       const options = {
@@ -63,7 +67,8 @@ const AddModal = ({ closeModal }) => {
           updatePortfolio(
             response.data.quoteType.shortName,
             response.data.assetProfile.website,
-            response.data.assetProfile.sector
+            response.data.assetProfile.sector,
+            response.data.quoteType.quoteType
           );
         })
         .catch(function (error) {
@@ -76,26 +81,49 @@ const AddModal = ({ closeModal }) => {
     }
   };
 
+  /**
+   * addStock bootstraps the whole process to start adding 
+   * the stock whose information the user entered
+   * @param {Event} e is the even that triggers the 
+   * function
+   */
   const addStock = (e) => {
     e.preventDefault();
     setMessage("Adding ...");
     fetchData();
   };
-
+  
+  /**
+   * Using Homebase's useEntity API call to get access to all
+   * relationships associated with the currentUser identity
+   */
   const [currentUser] = useEntity({ identity: "currentUser" });
+
+  /**
+   * Using Homebase's useQuery API call to get all the stocks
+   * the user owns
+   */
   const [stocks] = useQuery({
     $find: "stock",
     $where: { stock: { user: currentUser.get("id") } },
   });
 
-  //console.log(stocks)
-  //const [stock] = useEntity({ stock: { tickerSymbol: tickerSymbol } });
-  //console.log(stock.get("id"));
-  //console.log(newStock)
-
+  /**
+   * Using Homebase's useTransact API to create a update/create 
+   * new stock entity
+   */
   const [transact] = useTransact();
 
-  const updatePortfolio = (companyName, companyWebsite, companySector) => {
+  /**
+   * updatePortfolio uses Homebase's useTransact API to make a new
+   * stock entity
+   * @param {String} companyName is the name of the company
+   * @param {String} companyWebsite is the website of the company
+   * @param {String} companySector is the sector of the company
+   * @param {String} stockType is the quoteTpe of the company if 
+   * no sector is given (e.g ETF, Index Funds)
+   */
+  const updatePortfolio = (companyName, companyWebsite, companySector, stockType) => {
     let stock;
     for (let i = 0; i < stocks.length; i++) {
       if (stocks[i].get("tickerSymbol") === tickerSymbol) {
@@ -127,7 +155,7 @@ const AddModal = ({ closeModal }) => {
             buyPrice: parseFloat(buyPrice),
             buyDate: buyDate,
             website: companyWebsite ? companyWebsite : "",
-            sector: companySector ? companySector : "",
+            sector: companySector ? companySector : stockType,
             name: companyName ? companyName : "",
           },
         },

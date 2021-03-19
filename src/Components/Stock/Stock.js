@@ -10,17 +10,20 @@ import "./stockStyle.css";
  * price of the stock and the current price
  */
 const Stock = ({ tickerSymbol, website, name, currentPrice }) => {
-  console.log(currentPrice);
   return (
     <div className="stock">
       {currentPrice && currentPrice.length == 2 ? (
         <>
           <div className="logo-img-container">
-            <img
+            {website ? <img
               className="logo-img"
               // the image of the company is taken from http://logo.clearbit.com
               src={`http://logo.clearbit.com/${website}`}
-            ></img>
+            ></img> : 
+            <div className="ticker-container">
+              <h4 className="ticker-label">{tickerSymbol}</h4>
+            </div>
+            }
           </div>
           <div className="company-name-container">
             <h1 className="company-name">{name}</h1>

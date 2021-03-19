@@ -64,3 +64,11 @@
   background-color: white;
   text-align: center;
 }
+
+.quickview-diversification{
+  width: 110px;
+  height: 110px;
+  margin: auto;
+  margin-top: 12px;
+  background-color: white;
+}

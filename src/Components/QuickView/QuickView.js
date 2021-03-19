@@ -4,29 +4,39 @@ import { useQuery, useEntity } from "homebase-react";
 import { useEffect, useState } from "react";
 import AddModal from "../AddModal/AddModal";
 import { Link } from "react-router-dom";
+import DiversificationGraph from "../DiversificationGraph/DiversificationGraph";
 
 /**
  * QuickView is a component that represents the three
  * different pieces (total invested, diversity, the ability
  * to add a stock) of information you see on the Dashboard
  */
-const QuickView = () => {
+const QuickView = ( {graphData} ) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [totalInvested, setTotalInvested] = useState(0);
   const [stocks, setStocks] = useState([]);
   const [shares, setShares] = useState([]);
 
-  const changeModalState = () => {
-    setShowAddModal(!showAddModal);
-  };
-
+  /**
+   * Using Homebase's useEntity API call to get access to all
+   * relationships associated with the currentUser identity
+   */
   const [currentUser] = useEntity({ identity: "currentUser" });
 
+  /**
+   * Using Homebase's useQuery API call to get all the stocks
+   * the user owns
+   */
   const [allStocks] = useQuery({
     $find: "stock",
     $where: { stock: { user: currentUser.get("id") } },
   });
 
+  /**
+   * useEffect here is being used to make an API call 
+   * that will return the current price of each stock 
+   * in the user's portfolio
+   */
   useEffect(() => {
     setStocks(allStocks);
 
@@ -56,7 +66,6 @@ const QuickView = () => {
       axios
         .request(options)
         .then(function (response) {
-          console.log(response.data.quoteResponse.result);
           parseResults(response.data.quoteResponse.result);
         })
         .catch(function (error) {
@@ -65,6 +74,16 @@ const QuickView = () => {
     }
   }, [allStocks, totalInvested]);
 
+  const changeModalState = () => {
+    setShowAddModal(!showAddModal);
+  };
+
+  /**
+   * parseResults adds up the value of the user's 
+   * portfolio to give the total amount they have invested
+   * @param {Array} stockQuotes is an array with the current
+   * price of the user's stocks
+   */
   const parseResults = (stockQuotes) => {
     let total = 0;
 
@@ -75,8 +94,6 @@ const QuickView = () => {
     setTotalInvested(Math.round(total), 2);
   };
 
-  console.log(totalInvested);
-
   return (
     <div className="quick-view-container">
       <Link to="/overview">
@@ -85,7 +102,14 @@ const QuickView = () => {
           <h1 className="total-invested-label">${totalInvested}</h1>
         </div>
       </Link>
-      <div className="quick-view-holder"></div>
+      <Link to="/diversification">
+        <div className="quick-view-holder">
+          <h1 className="label">Diversification</h1>
+          <div className="quickview-diversification">
+            <DiversificationGraph graphData={graphData} width={"100"} height={"100"} color={"white"} showLegend={false} showLabel={false}/>
+          </div>
+        </div>
+      </Link>
       <div className="quick-view-holder add">
         <div className="label-container">
           <h1 className="label">Update</h1>
