@@ -11,7 +11,7 @@ import DiversificationGraph from "../DiversificationGraph/DiversificationGraph";
  * different pieces (total invested, diversity, the ability
  * to add a stock) of information you see on the Dashboard
  */
-const QuickView = ( {graphData} ) => {
+const QuickView = ({ graphData }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [totalInvested, setTotalInvested] = useState(0);
   const [stocks, setStocks] = useState([]);
@@ -33,8 +33,8 @@ const QuickView = ( {graphData} ) => {
   });
 
   /**
-   * useEffect here is being used to make an API call 
-   * that will return the current price of each stock 
+   * useEffect here is being used to make an API call
+   * that will return the current price of each stock
    * in the user's portfolio
    */
   useEffect(() => {
@@ -79,7 +79,7 @@ const QuickView = ( {graphData} ) => {
   };
 
   /**
-   * parseResults adds up the value of the user's 
+   * parseResults adds up the value of the user's
    * portfolio to give the total amount they have invested
    * @param {Array} stockQuotes is an array with the current
    * price of the user's stocks
@@ -105,9 +105,23 @@ const QuickView = ( {graphData} ) => {
       <Link to="/diversification">
         <div className="quick-view-holder">
           <h1 className="label">Diversification</h1>
-          <div className="quickview-diversification">
-            <DiversificationGraph graphData={graphData} width={"100"} height={"100"} color={"white"} showLegend={false} showLabel={false}/>
-          </div>
+          {
+            graphData ? 
+            <div className="quickview-diversification">
+              <DiversificationGraph
+                graphData={graphData}
+                width={"100"}
+                height={"100"}
+                color={"white"}
+                showLegend={false}
+                showLabel={false}
+              />
+            </div>
+            :
+            <div className="quickview-diversification">
+              <div className="no-mini-graph"></div>
+            </div>
+          }
         </div>
       </Link>
       <div className="quick-view-holder add">

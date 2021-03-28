@@ -4,6 +4,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import Home from "../Home/Home";
+import Overview from "../Overview/Overview";
 import Header from "../Header/Header";
 import SignIn from "../SignIn/SignIn";
 import SignUp from "../SignUp/SignUp";
@@ -54,6 +55,10 @@ const Athenticated = ({ children }) => {
       <Route exact path="/" render={() => <Home />}></Route>
       <Route exact path="/signin" render={() => <SignIn />}></Route>
       <Route exact path="/signup" render={() => <SignUp />}></Route>
+      <Route exact path="/dashboard" render={() => <Home />}></Route>
+      <Route exact path="/overview" render={() => <Home />}></Route>
+      {/* <Route exact path="/dashboard" render={() => <Dashboard setDiversificationGraphData={()=>{console.log("ok")}}/>}></Route>
+      <Route exact path="/overview" render={() => <Overview />}></Route> */}
     </Router>
   );
 };

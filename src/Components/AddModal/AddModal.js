@@ -41,7 +41,7 @@ const AddModal = ({ closeModal }) => {
   };
 
   /**
-   * fetchData makes an API call to get information 
+   * fetchData makes an API call to get information
    * about the stock the user entered
    */
   const fetchData = () => {
@@ -82,9 +82,9 @@ const AddModal = ({ closeModal }) => {
   };
 
   /**
-   * addStock bootstraps the whole process to start adding 
+   * addStock bootstraps the whole process to start adding
    * the stock whose information the user entered
-   * @param {Event} e is the even that triggers the 
+   * @param {Event} e is the even that triggers the
    * function
    */
   const addStock = (e) => {
@@ -92,7 +92,7 @@ const AddModal = ({ closeModal }) => {
     setMessage("Adding ...");
     fetchData();
   };
-  
+
   /**
    * Using Homebase's useEntity API call to get access to all
    * relationships associated with the currentUser identity
@@ -109,7 +109,7 @@ const AddModal = ({ closeModal }) => {
   });
 
   /**
-   * Using Homebase's useTransact API to create a update/create 
+   * Using Homebase's useTransact API to create a update/create
    * new stock entity
    */
   const [transact] = useTransact();
@@ -120,10 +120,15 @@ const AddModal = ({ closeModal }) => {
    * @param {String} companyName is the name of the company
    * @param {String} companyWebsite is the website of the company
    * @param {String} companySector is the sector of the company
-   * @param {String} stockType is the quoteTpe of the company if 
+   * @param {String} stockType is the quoteTpe of the company if
    * no sector is given (e.g ETF, Index Funds)
    */
-  const updatePortfolio = (companyName, companyWebsite, companySector, stockType) => {
+  const updatePortfolio = (
+    companyName,
+    companyWebsite,
+    companySector,
+    stockType
+  ) => {
     let stock;
     for (let i = 0; i < stocks.length; i++) {
       if (stocks[i].get("tickerSymbol") === tickerSymbol) {

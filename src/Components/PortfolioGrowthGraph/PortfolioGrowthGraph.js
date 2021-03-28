@@ -10,7 +10,6 @@ import axios from "axios";
  * @param {Array} shares is an array the amount of the stocks the user owns
  */
 const PortfolioGrowthGraph = ({ tickerSymbols, shares }) => {
-
   const [graphData, setGraphData] = useState([]);
   const [timeStamps, setTimeStamps] = useState([]);
   const [intervals, setIntervals] = useState("5m");
@@ -20,7 +19,7 @@ const PortfolioGrowthGraph = ({ tickerSymbols, shares }) => {
    * useEffect here is being used to grab the closing price of the
    * stock according the chosen range
    */
-   useEffect(() => {
+  useEffect(() => {
     if (tickerSymbols.length !== 0) {
       const options = {
         method: "GET",
@@ -148,20 +147,67 @@ const PortfolioGrowthGraph = ({ tickerSymbols, shares }) => {
     setGraphData(data);
   };
 
-
   var myChart;
   /**
    * useEffect here is being used to use Chart.js to make the chart
    * of the portfolio growth
    */
   useEffect(() => {
+
+
+    
     const ctx = document.getElementById("myChart");
+
     if (myChart) {
       myChart.destroy();
     }
 
+    let draw = Chart.controllers.line.prototype.draw;
+Chart.controllers.line = Chart.controllers.line.extend({
+    draw: function() {
+        draw.apply(this, arguments);
+        let ctx = this.chart.chart.ctx;
+        let _stroke = ctx.stroke;
+        ctx.stroke = function() {
+            ctx.save();
+            ctx.shadowColor = '#000000';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            _stroke.apply(this, arguments)
+            ctx.restore();
+        }
+    }
+});
+
+Chart.defaults.LineWithLine = Chart.defaults.line;
+Chart.controllers.LineWithLine = Chart.controllers.line.extend({
+   draw: function(ease) {
+      Chart.controllers.line.prototype.draw.call(this, ease);
+
+      if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+         var activePoint = this.chart.tooltip._active[0],
+             ctx = this.chart.ctx,
+             x = activePoint.tooltipPosition().x,
+             topY = this.chart.scales['y-axis-0'].top,
+             bottomY = this.chart.scales['y-axis-0'].bottom;
+
+         // draw line
+         ctx.save();
+         ctx.beginPath();
+         ctx.moveTo(x, topY);
+         ctx.lineTo(x, bottomY);
+         ctx.lineWidth = 2;
+         ctx.strokeStyle = 'black';
+         ctx.stroke();
+         ctx.restore();
+      }
+   }
+});
+
+
     myChart = new Chart(ctx, {
-      type: "line",
+      type: "LineWithLine",
       data: {
         labels: timeStamps,
         datasets: [
@@ -199,10 +245,18 @@ const PortfolioGrowthGraph = ({ tickerSymbols, shares }) => {
         legend: {
           display: false,
         },
+        elements:{
+          point: {
+          radius: 0,
+        }
+      },
         responsive: true,
+        
 
         maintainAspectRatio: true,
         tooltips: {
+           mode:"nearest",
+          intersect: false,
           callbacks: {
             label: function (tooltipItem) {
               return tooltipItem.yLabel;
@@ -211,6 +265,8 @@ const PortfolioGrowthGraph = ({ tickerSymbols, shares }) => {
         },
       },
     });
+
+  
   }, [graphData, myChart]);
 
   /**

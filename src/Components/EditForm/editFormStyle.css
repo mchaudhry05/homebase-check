@@ -1,0 +1,63 @@
+.edit-stock-container {
+  width: 95%;
+  height: fit-content;
+  background-color: white;
+  padding: 20px;
+  margin: auto;
+  margin-top: 50px;
+  border: white 2px;
+  border-radius: 15px;
+  outline: none !important;
+  box-shadow: 2px 2px 5px grey;
+  background-color: white;
+}
+
+.edit-stock-form {
+  background-color: white;
+}
+
+.content-container {
+  display: block;
+  text-align: center;
+  background-color: white;
+}
+
+.instruction-message {
+  margin-top: 50px;
+  background-color: white;
+}
+
+.inputs-container {
+  background-color: white;
+  margin-top: 50px;
+}
+
+.update-stock {
+  display: block;
+  width: 180px;
+  height: 45px;
+  background-color: black;
+  color: white;
+  border-color: black;
+  border-radius: 15px;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  outline: none;
+  cursor: pointer;
+}
+
+.delete-stock {
+  display: block;
+  width: 180px;
+  height: 45px;
+  background-color: #ff0000;
+  color: white;
+  border-color: #ff0000;
+  border-radius: 15px;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  outline: none;
+  cursor: pointer;
+}

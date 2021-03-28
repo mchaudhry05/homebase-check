@@ -31,6 +31,7 @@ const SignUp = () => {
           displayName: name,
         });
 
+        localStorage.setItem("token", "passed!");
         window.location = "/dashboard";
         setRedirect(true);
       })
@@ -41,7 +42,8 @@ const SignUp = () => {
   };
 
   if (redirect) {
-    return <Redirect to={redirect}></Redirect>;
+    localStorage.setItem("token", "passed!");
+    return <Redirect to={"/dashboard"}></Redirect>;
   }
 
   return (

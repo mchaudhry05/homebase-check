@@ -16,6 +16,7 @@ const Header = () => {
 
   useEffect(() => {
     if (location === "/signin") {
+      // localStorage.removeItem("token");
       setHideSignIn(true);
     } else if (location === "/signup") {
       setHideSignUp(true);

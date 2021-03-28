@@ -42,7 +42,6 @@ const Overview = () => {
    * call to get the user's currrent total amount invested
    */
   useEffect(() => {
-   
     const tickerSymbols = [];
     const buyPricePerStock = [];
     const sharesPerStock = [];
@@ -54,7 +53,7 @@ const Overview = () => {
     });
 
     setShares(sharesPerStock);
-    
+
     if (allStocks.length !== 0) {
       const options = {
         method: "GET",
@@ -86,7 +85,7 @@ const Overview = () => {
 
   /**
    * parseResults take the result from the API call to calculate
-   * the percentage growth of a user's portfolio as the total amount
+   * the percentage growth of a user's portfolio as well as the total amount
    * they have invested (market value of portfolio)
    * @param {Array} stockQuotes is an array with the current prices of the stocks
    * @param {Array} shares is an array with the number of stocks per stock
@@ -99,8 +98,12 @@ const Overview = () => {
     stockQuotes.map((stock, index) => {
       marketValue += stock.ask * shares[index];
       costBasis += buyPrice[index] * shares[index];
-      updateAnnualIncome(stock.trailingAnnualDividendRate, shares[index]);
-      updateMonthlyIncome(stock.dividendDate, stock.diviendsPerShare, shares[index]);
+      updateAnnualIncome(stock.dividendYield, shares[index]);
+      updateMonthlyIncome(
+        stock.dividendDate,
+        stock.diviendsPerShare,
+        shares[index]
+      );
     });
 
     const growthPercentage = (marketValue - costBasis) / costBasis;
@@ -118,8 +121,7 @@ const Overview = () => {
   let partialAnnualIncome = 0;
   const updateAnnualIncome = (trailingAnnualDividendRate, shares) => {
     if (trailingAnnualDividendRate) {
-      partialAnnualIncome +=
-        parseFloat(trailingAnnualDividendRate) * shares;
+      partialAnnualIncome += parseFloat(trailingAnnualDividendRate) * shares;
     } else {
     }
 
@@ -137,7 +139,7 @@ const Overview = () => {
   const updateMonthlyIncome = (diviendDate, diviendsPerShare, shares) => {
     var date = new Date();
     const month = date.getMonth();
-    console.log(month); 
+    console.log(month);
     const dividendDateFormatted = new Date(1000 * diviendDate);
 
     if (diviendDate) {
@@ -179,12 +181,16 @@ const Overview = () => {
           <h3 className="statistic-label">${annualIncome}</h3>
         </div>
       </div>
-      <div className="graph">
-        <PortfolioGrowthGraph
-          tickerSymbols={tickerSymbols}
-          shares={shares}
-        />
-      </div>
+      {
+        allStocks.length > 0 ? 
+        <div className="graph">
+          <PortfolioGrowthGraph tickerSymbols={tickerSymbols} shares={shares} />
+       </div>
+       :
+       <div className="no-stocks-container">
+         <img className="no-graph-img" src="./Group 33.svg"></img>
+       </div>
+      }   
       <div className="padding"></div>
     </div>
   );

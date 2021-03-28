@@ -15,15 +15,17 @@ const Stock = ({ tickerSymbol, website, name, currentPrice }) => {
       {currentPrice && currentPrice.length == 2 ? (
         <>
           <div className="logo-img-container">
-            {website ? <img
-              className="logo-img"
-              // the image of the company is taken from http://logo.clearbit.com
-              src={`http://logo.clearbit.com/${website}`}
-            ></img> : 
-            <div className="ticker-container">
-              <h4 className="ticker-label">{tickerSymbol}</h4>
-            </div>
-            }
+            {website ? (
+              <img
+                className="logo-img"
+                // the image of the company is taken from http://logo.clearbit.com
+                src={`http://logo.clearbit.com/${website}`}
+              ></img>
+            ) : (
+              <div className="ticker-container">
+                <h4 className="ticker-label">{tickerSymbol}</h4>
+              </div>
+            )}
           </div>
           <div className="company-name-container">
             <h1 className="company-name">{name}</h1>

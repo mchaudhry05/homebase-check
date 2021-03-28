@@ -9,7 +9,7 @@
 .myChart {
   width: 380px;
   height: 380px;
-  border-radius: 30px;
+  /* border-radius: 30px; */
   background-color: red;
 }
 .margin-top {
@@ -18,7 +18,9 @@
 }
 .chartjs-render-monitor {
   background-color: white;
-  border-radius: 30px;
+  cursor: pointer;
+  width: fit-content;
+  /* border-radius: 30px; */
 }
 
 .range-form-container {

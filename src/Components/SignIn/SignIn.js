@@ -24,6 +24,7 @@ const SignIn = () => {
       .then((userCredential) => {
         // Signed in
         var signedUser = userCredential.user;
+        localStorage.setItem("token", "passed!");
         setRedirect("/dashboard");
       })
       .catch((error) => {
@@ -34,6 +35,7 @@ const SignIn = () => {
   };
 
   if (redirect) {
+    localStorage.setItem("token", "passed!");
     return <Redirect to={redirect}></Redirect>;
   }
 

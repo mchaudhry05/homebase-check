@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useQuery, useEntity } from "homebase-react";
-import DiversificationGraph from "../DiversificationGraph/DiversificationGraph"
-import './diversificationStyle.css'
+import DiversificationGraph from "../DiversificationGraph/DiversificationGraph";
+import "./diversificationStyle.css";
 import Stock from "../Stock/Stock";
 
 const Diversification = () => {
-  const [previousSector, setPreviousSector] = useState("All") 
+  const [previousSector, setPreviousSector] = useState("All");
   const [sectorSelected, setSectorSelected] = useState("All");
   const [graphData, setGraphData] = useState();
   const [stocksFound, setStocks] = useState([]);
@@ -20,7 +20,7 @@ const Diversification = () => {
    */
   const [currentUser] = useEntity({ identity: "currentUser" });
 
-   /**
+  /**
    * Using Homebase's useQuery API call to get all the stocks
    * the user owns
    */
@@ -30,30 +30,29 @@ const Diversification = () => {
   });
 
   /**
-   * useEffect here is being used to calculate the different 
-   * sectors thats exist and the amount of stocks the user 
+   * useEffect here is being used to calculate the different
+   * sectors thats exist and the amount of stocks the user
    * owns in those sectors
    */
-  useEffect(()=>{
+  useEffect(() => {
     let diversification = new Map();
-   
-    if (allStocks.length !== 0){
-        allStocks.map(stock=>{
-            if (diversification.has(stock.get("sector"))){
-                const oldCount = diversification.get(stock.get("sector")); 
-                const newCount = oldCount + stock.get("shares"); 
-                diversification.set(stock.get("sector"), newCount); 
-            }else{
-                const count = stock.get("shares"); 
-                diversification.set(stock.get("sector"), count); 
-            }
-        });
-        
-        setGraphData(diversification);
+
+    if (allStocks.length !== 0) {
+      allStocks.map((stock) => {
+        if (diversification.has(stock.get("sector"))) {
+          const oldCount = diversification.get(stock.get("sector"));
+          const newCount = oldCount + stock.get("shares");
+          diversification.set(stock.get("sector"), newCount);
+        } else {
+          const count = stock.get("shares");
+          diversification.set(stock.get("sector"), count);
+        }
+      });
+
+      setGraphData(diversification);
     }
   }, [allStocks]);
-  
-  
+
   /**
    * useEffect is used here to set the the state of the component
    * with all of the stocks that were found
@@ -67,7 +66,7 @@ const Diversification = () => {
    * the stocks that the user owns
    */
   useEffect(() => {
-    let stockPrices = [];
+    let stockPrices = []; //change name of this 
     stocksFound.map((stock) => stockPrices.push(stock.get("tickerSymbol")));
     setListOfStockPrices(stockPrices);
   }, [stocksFound.length, allStocks.length]);
@@ -127,59 +126,74 @@ const Diversification = () => {
             <h1 className="back-button">Back</h1>
           </div>
         </Link>
-       </div>
-       <div className="diversificiation-graph-container">
-           <div>
-            <DiversificationGraph graphData={graphData} width={"380"} height={"380"} color={"#f9fafe"} showLegend={true} sectorSelected={sectorSelected} setSectorSelected={setSectorSelected} previousSector={previousSector} setPreviousSector={setPreviousSector} showLabel={true}/>
-            </div>
-       </div>
-       <div className="sector-stocks-container">
-           
-           <h1>{sectorSelected + " Stocks"}</h1>
+      </div>
+      {
+        allStocks.length > 0 ?
+  
+        <>
+      <div className="diversificiation-graph-container">
+        <div>
+          <DiversificationGraph
+            graphData={graphData}
+            width={"380"}
+            height={"380"}
+            color={"#f9fafe"}
+            showLegend={true}
+            sectorSelected={sectorSelected}
+            setSectorSelected={setSectorSelected}
+            previousSector={previousSector}
+            setPreviousSector={setPreviousSector}
+            showLabel={true}
+          />
+        </div>
+      </div>
+      <div className="sector-stocks-container">
+        <h1>{sectorSelected + " Stocks"}</h1>
 
-            {
-                allStocks.length !== 0 ? 
-                <>
-                    {
-                        sectorSelected === previousSector ? 
-                        
-                            <>
-                            {allStocks.map((stock, index) =>
-                                <Stock
-                                key={stock.get("id")}
-                                name={stock.get("name")}
-                                tickerSymbol={stock.get("tickerSymbol")}
-                                website={stock.get("website")}
-                                currentPrice={stockPrices[index]}
-                                />
-                            )}
-                            </>
-                            :
-                    
-                            <>
-                            {allStocks.filter(stock=> stock.get("sector") === sectorSelected).map(filteredStock =>
-                        
-                                // console.log(filteredStock.get("name"))
-                                <Stock
-                                key={filteredStock.get("id")}
-                                name={filteredStock.get("name")}
-                                tickerSymbol={filteredStock.get("tickerSymbol")}
-                                website={filteredStock.get("website")}
-                                currentPrice={[100, 200]}
-                                />
-
-                            )}
-                            </>
-                    }
-                    
-                </>
-                : 
-                    
-                <h1>Loading</h1>
-            }
-      </div> 
+        {allStocks.length !== 0 ? (
+          <>
+            {sectorSelected === previousSector ? (
+              <>
+                {allStocks.map((stock, index) => (
+                  <Stock
+                    key={stock.get("id")}
+                    name={stock.get("name")}
+                    tickerSymbol={stock.get("tickerSymbol")}
+                    website={stock.get("website")}
+                    currentPrice={stockPrices[index]}
+                  />
+                ))}
+              </>
+            ) : (
+              <>
+                {allStocks
+                  .filter((stock) => stock.get("sector") === sectorSelected)
+                  .map((filteredStock) => (
+                    // console.log(filteredStock.get("name"))
+                    <Stock
+                      key={filteredStock.get("id")}
+                      name={filteredStock.get("name")}
+                      tickerSymbol={filteredStock.get("tickerSymbol")}
+                      website={filteredStock.get("website")}
+                      currentPrice={[100, 200]}
+                    />
+                  ))}
+              </>
+            )}
+          </>
+        ) : (
+          <h1>Loading</h1>
+        )}
+      </div>
+      </>
+      :
+      <div className="no-stocks-container">
+        <img className="no-graph-img"src="./Group 31.svg"></img>
+      </div>
+    }
       <div className="padding"></div>
     </div>
+    
   );
 };
 

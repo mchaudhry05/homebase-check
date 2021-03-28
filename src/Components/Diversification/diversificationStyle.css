@@ -1,13 +1,28 @@
 .diversification-container {
-    width: auto;
-    height: 90vh;
-    padding: 50px;
+  width: auto;
+  height: 90vh;
+  padding: 50px;
+}
+
+.diversificiation-graph-container {
+  display: flex;
+  justify-content: center;
+  width: auto;
+  margin-top: 20px;
+  /* background-color: ; */
+}
+
+.no-graph-img{
+  margin:auto;
+  margin-top: 50px;
+
+}
+
+@media screen and (max-width: 600px) {
+  .no-graph-img{
+    margin:auto;
+    width: 350px;
+    height: 180.76px;
   }
-  
-  .diversificiation-graph-container{
-    display: flex;
-    justify-content: center;
-    width: auto;
-    margin-top: 20px ;
-    background-color: 
-  }
+
+}

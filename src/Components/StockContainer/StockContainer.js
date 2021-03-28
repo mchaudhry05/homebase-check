@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useEntity } from "homebase-react";
 import axios from "axios";
 import Stock from "../Stock/Stock";
-
+import { Link } from "react-router-dom";
 /**
  * Stock Container is a component that houses
  * some of the API calls made to gather more
@@ -92,17 +92,19 @@ const StockContainer = () => {
       {stocksFound.length !== 0 && stockPrices.length !== 0 ? (
         <>
           {stocksFound.map((stock, index) => (
-            <Stock
-              key={stock.get("id")}
-              name={stock.get("name")}
-              tickerSymbol={stock.get("tickerSymbol")}
-              website={stock.get("website")}
-              currentPrice={stockPrices[index]}
-            />
+            <Link to={"/stockoverview/" + stock.get("tickerSymbol")}>
+              <Stock
+                key={stock.get("id")}
+                name={stock.get("name")}
+                tickerSymbol={stock.get("tickerSymbol")}
+                website={stock.get("website")}
+                currentPrice={stockPrices[index]}
+              />
+            </Link>
           ))}
         </>
       ) : (
-        <h1>You don't have any Investments!</h1>
+        <h1>Loading ...</h1>
       )}
       <div className="padding"></div>
     </div>

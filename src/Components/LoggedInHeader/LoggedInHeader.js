@@ -8,11 +8,14 @@ import { useClient } from "homebase-react";
 const LoggedInHeader = () => {
   const [client] = useClient();
   const signOut = (e) => {
+    
     firebase
       .auth()
       .signOut()
       .then(() => {
+        localStorage.removeItem("token");
         client.dbFromString(window.emptyDB);
+        //localStorage.removeItem("token");
       })
       .catch((error) => {
         alert(error);
