@@ -6,7 +6,7 @@
 # About check 
 
 check is a web application that lets you track the growth of your portfolio. The user can input the stocks they own
-and look at the diveristy of their portfolio at a glance. They can also see the growth of each individual stock as 
+and look at the diversity of their portfolio at a glance. They can also see the growth of each individual stock as 
 well as the whole portfolio. The project is live [here.](https://check-fintech.web.app/)
 
 # The homebase factor 
