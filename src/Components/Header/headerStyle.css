@@ -16,6 +16,11 @@
   align-self: center;
   width: 30%;
   height: auto;
+  z-index: 1;
+}
+
+#logo-name {
+  font-weight: 1000;
 }
 
 .sign-in-out {

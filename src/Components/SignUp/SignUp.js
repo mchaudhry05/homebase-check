@@ -12,6 +12,7 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [redirect, setRedirect] = useState(false);
 
   const updateEmail = (e) => setEmail(e.target.value);
@@ -37,7 +38,10 @@ const SignUp = () => {
       })
       .catch((error) => {
         var errorMessage = error.message;
-        alert(errorMessage);
+        setMessage(errorMessage);
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
       });
   };
 
@@ -48,8 +52,11 @@ const SignUp = () => {
 
   return (
     <div className="sign-up-container">
-      <div className="form-container">
+      <div id="sign-up-form" className="form-container">
         <h2>Sign Up</h2>
+        <div className="error-message-container">
+          <p className="error-message">{message}</p>
+        </div>
         <form>
           <label>Name</label>
           <br></br>

@@ -59,7 +59,6 @@ const StockContainer = () => {
       axios
         .request(options)
         .then(function (response) {
-          console.log(response.data.quoteResponse.result);
           parseResults(response.data.quoteResponse.result);
         })
         .catch(function (error) {
@@ -83,12 +82,11 @@ const StockContainer = () => {
       stockPriceChanges = [];
     });
     setStockPrices(stockPrices);
-    //console.log(stockPrices);
   };
 
   return (
     <div className="stock-container">
-      <h1>Your Investments</h1>
+      <h1 className="your-investments-label">Your Investments</h1>
       {stocksFound.length !== 0 && stockPrices.length !== 0 ? (
         <>
           {stocksFound.map((stock, index) => (
@@ -104,7 +102,11 @@ const StockContainer = () => {
           ))}
         </>
       ) : (
-        <h1>Loading ...</h1>
+        <>
+          <div className="stock-skeleton animate"></div>
+          <div className="stock-skeleton animate"></div>
+          <div className="stock-skeleton animate"></div>
+        </>
       )}
       <div className="padding"></div>
     </div>

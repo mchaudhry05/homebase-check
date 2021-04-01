@@ -12,17 +12,15 @@
   /* background-color: ; */
 }
 
-.no-graph-img{
-  margin:auto;
+.no-graph-img {
+  margin: auto;
   margin-top: 50px;
-
 }
 
 @media screen and (max-width: 600px) {
-  .no-graph-img{
-    margin:auto;
+  .no-graph-img {
+    margin: auto;
     width: 350px;
     height: 180.76px;
   }
-
 }

@@ -5,8 +5,8 @@ import axios from "axios";
 
 /**
  * AddModal is a component that represents a modal
- * that allows you to input information about a new
- * stock you have added to your portfolio
+ * that allows the user to input information about a new
+ * stock they have added to their portfolio
  * @param {Boolean} closeModal this is a boolean
  * set to allow the user to open and close the
  * AddModal
@@ -61,7 +61,6 @@ const AddModal = ({ closeModal }) => {
       axios
         .request(options)
         .then(function (response) {
-          console.log(response.data);
           setData(response.data);
 
           updatePortfolio(
@@ -76,7 +75,6 @@ const AddModal = ({ closeModal }) => {
           setTimeout(() => {
             setMessage("");
           }, 3000);
-          console.log(error);
         });
     }
   };

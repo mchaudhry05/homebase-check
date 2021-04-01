@@ -11,6 +11,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState("");
+  const [message, setMessage] = useState("");
 
   const updateEmail = (e) => setEmail(e.target.value);
   const updatePassword = (e) => setPassword(e.target.value);
@@ -28,9 +29,11 @@ const SignIn = () => {
         setRedirect("/dashboard");
       })
       .catch((error) => {
-        //made something nice for this
         var errorMessage = error.message;
-        alert(errorMessage);
+        setMessage(errorMessage);
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
       });
   };
 
@@ -43,6 +46,11 @@ const SignIn = () => {
     <div className="sign-in-container">
       <div className="form-container">
         <h2>Sign In</h2>
+        {message && (
+          <div className="error-message-container">
+            <p className="error-message">{message}</p>
+          </div>
+        )}
         <form>
           <label>Email</label>
           <br></br>

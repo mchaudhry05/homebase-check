@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useQuery, useEntity } from "homebase-react";
 import "./overviewStyle.css";
 import PortfolioGrowthGraph from "../PortfolioGrowthGraph/PortfolioGrowthGraph";
+import SkeletonOverview from "../SkeletonComponents/SkeletonOverview";
 
 /**
  * Overview is a component that represents the the overview page
@@ -19,6 +20,7 @@ const Overview = () => {
   const [annualIncome, setAnnualIncome] = useState(0);
   const [tickerSymbols, setTickerSymbols] = useState([]);
   const [shares, setShares] = useState([]);
+  const [display, setDisplay] = useState(true);
 
   /**
    * Using Homebase's useEntity API call to get access to all
@@ -104,6 +106,7 @@ const Overview = () => {
         stock.diviendsPerShare,
         shares[index]
       );
+      setDisplay(false);
     });
 
     const growthPercentage = (marketValue - costBasis) / costBasis;
@@ -139,11 +142,9 @@ const Overview = () => {
   const updateMonthlyIncome = (diviendDate, diviendsPerShare, shares) => {
     var date = new Date();
     const month = date.getMonth();
-    console.log(month);
     const dividendDateFormatted = new Date(1000 * diviendDate);
 
     if (diviendDate) {
-      //const diviendMonth = parseInt(diviendDate.fmt.substring(6, 7));
       if (dividendDateFormatted.getMonth() && month === diviendsPerShare) {
         partialMonthlyIncome += diviendsPerShare * shares;
       }
@@ -151,48 +152,63 @@ const Overview = () => {
     setMonthlyIncome(partialMonthlyIncome.toFixed(2));
   };
 
+  setTimeout(() => {
+    setDisplay(false);
+  }, 3000);
+
+  if (localStorage.getItem("token") !== "passed!") {
+    return <Redirect to="/"></Redirect>;
+  }
+
   return (
-    <div className="overview-container">
-      <div className="section-header-container">
-        <h1 className="section-name">Overview</h1>
-        <Link to="/dashboard">
-          <div className="back-button">
-            <h1 className="back-button">Back</h1>
+    <>
+      {display && <SkeletonOverview />}
+      {!display && (
+        <div className="overview-container">
+          <div className="section-header-container">
+            <h1 className="section-name">Overview</h1>
+            <Link to="/dashboard">
+              <div className="back-button">
+                <img className="back-img" src="../../images/back.svg"></img>
+              </div>
+            </Link>
           </div>
-        </Link>
-      </div>
-      <div className="statistic-container">
-        <div className="statistic-box">
-          <h2 className="label">Total Invested</h2>
-          <h3 className="statistic-label">${totalInvested}</h3>
+          <div className="statistic-container">
+            <div className="statistic-box">
+              <h2 className="label">Total Invested</h2>
+              <h3 className="statistic-label">${totalInvested}</h3>
+            </div>
+            <div className="statistic-box">
+              <h2 className="label">Profit/Loss</h2>
+              <h3 className="statistic-label">
+                {growth < 0 ? growth : "+" + growth}%
+              </h3>
+            </div>
+            <div className="statistic-box">
+              <h2 className="label">Monthly Income</h2>
+              <h3 className="statistic-label">${monthlyIncome}</h3>
+            </div>
+            <div className="statistic-box">
+              <h2 className="label">Annual Income</h2>
+              <h3 className="statistic-label">${annualIncome}</h3>
+            </div>
+          </div>
+          {allStocks.length > 0 ? (
+            <div className="graph">
+              <PortfolioGrowthGraph
+                tickerSymbols={tickerSymbols}
+                shares={shares}
+              />
+            </div>
+          ) : (
+            <div className="no-stocks-container">
+              <img className="no-graph-img" src="./images/no-graph.svg"></img>
+            </div>
+          )}
+          <div className="padding"></div>
         </div>
-        <div className="statistic-box">
-          <h2 className="label">Profit/Loss</h2>
-          <h3 className="statistic-label">
-            {growth < 0 ? growth : "+" + growth}%
-          </h3>
-        </div>
-        <div className="statistic-box">
-          <h2 className="label">Monthly Income</h2>
-          <h3 className="statistic-label">${monthlyIncome}</h3>
-        </div>
-        <div className="statistic-box">
-          <h2 className="label">Annual Income</h2>
-          <h3 className="statistic-label">${annualIncome}</h3>
-        </div>
-      </div>
-      {
-        allStocks.length > 0 ? 
-        <div className="graph">
-          <PortfolioGrowthGraph tickerSymbols={tickerSymbols} shares={shares} />
-       </div>
-       :
-       <div className="no-stocks-container">
-         <img className="no-graph-img" src="./Group 33.svg"></img>
-       </div>
-      }   
-      <div className="padding"></div>
-    </div>
+      )}
+    </>
   );
 };
 

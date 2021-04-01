@@ -21,6 +21,11 @@
   justify-self: flex-end;
 }
 
+.back-img {
+  width: 30px;
+  height: 30px;
+}
+
 .statistic-container {
   display: flex;
   justify-content: center;
@@ -43,7 +48,7 @@
   box-sizing: border-box;
   outline: none !important;
   border: white 2px;
-  box-shadow: 2px 2px 5px grey;
+  box-shadow: 2px 2px 5px #e6e6e6;
   background-color: white;
 }
 
@@ -51,8 +56,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 95%;
+  width: 850px;
   height: fit-content;
+  min-height: 400px;
   border-radius: 20px;
   margin: auto;
   padding: 10px;
@@ -61,7 +67,7 @@
   box-sizing: border-box;
   outline: none !important;
   border: white 2px;
-  box-shadow: 2px 2px 5px grey;
+  box-shadow: 2px 2px 5px #e6e6e6;
   background-color: white;
 }
 

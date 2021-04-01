@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import AddModal from "../AddModal/AddModal";
 import { Link } from "react-router-dom";
 import DiversificationGraph from "../DiversificationGraph/DiversificationGraph";
+import SkeletonQuickView from "../SkeletonComponents/SkeletonQuickView";
 
 /**
  * QuickView is a component that represents the three
@@ -13,9 +14,10 @@ import DiversificationGraph from "../DiversificationGraph/DiversificationGraph";
  */
 const QuickView = ({ graphData }) => {
   const [showAddModal, setShowAddModal] = useState(false);
-  const [totalInvested, setTotalInvested] = useState(0);
+  const [totalInvested, setTotalInvested] = useState(0.0);
   const [stocks, setStocks] = useState([]);
   const [shares, setShares] = useState([]);
+  const [display, setDisplay] = useState(true);
 
   /**
    * Using Homebase's useEntity API call to get access to all
@@ -66,7 +68,7 @@ const QuickView = ({ graphData }) => {
       axios
         .request(options)
         .then(function (response) {
-          parseResults(response.data.quoteResponse.result);
+          parseResults(response.data.quoteResponse.result, sharesPerStock);
         })
         .catch(function (error) {
           console.error(error);
@@ -84,59 +86,81 @@ const QuickView = ({ graphData }) => {
    * @param {Array} stockQuotes is an array with the current
    * price of the user's stocks
    */
-  const parseResults = (stockQuotes) => {
-    let total = 0;
+  const parseResults = (stockQuotes, shares) => {
+    let total = 0.0;
 
     stockQuotes.map((stock, index) => {
-      total += stock.ask * shares[index];
+      console.log(shares[index]);
+      total += parseFloat(stock.ask) * parseFloat(shares[index]);
     });
 
     setTotalInvested(Math.round(total), 2);
+    setDisplay(false);
   };
 
-  return (
-    <div className="quick-view-container">
-      <Link to="/overview">
-        <div className="quick-view-holder">
-          <h1 className="label">Total Invested</h1>
-          <h1 className="total-invested-label">${totalInvested}</h1>
-        </div>
-      </Link>
-      <Link to="/diversification">
-        <div className="quick-view-holder">
-          <h1 className="label">Diversification</h1>
-          {
-            graphData ? 
-            <div className="quickview-diversification">
-              <DiversificationGraph
-                graphData={graphData}
-                width={"100"}
-                height={"100"}
-                color={"white"}
-                showLegend={false}
-                showLabel={false}
-              />
-            </div>
-            :
-            <div className="quickview-diversification">
-              <div className="no-mini-graph"></div>
-            </div>
-          }
-        </div>
-      </Link>
-      <div className="quick-view-holder add">
-        <div className="label-container">
-          <h1 className="label">Update</h1>
-        </div>
+  setTimeout(() => {
+    setDisplay(false);
+  }, 3000);
 
-        <div className="add-button" onClick={changeModalState}>
-          <h1 className="add-icon" onClick={changeModalState}>
-            +
-          </h1>
+  return (
+    <>
+      {display && <SkeletonQuickView />}
+      {!display && (
+        <div className="quick-view-container">
+          <Link to="/overview">
+            <div className="quick-view-holder">
+              <h1 className="total-invested-label">${totalInvested}</h1>
+              <div className="quick-view-img-label quick-view-margin-down">
+                <img className="label-img" src="./images/money.svg"></img>
+                <h2 className="quick-view-container-labels">Total Invested</h2>
+              </div>
+            </div>
+          </Link>
+          <Link to="/diversification">
+            <div className="quick-view-holder">
+              {graphData ? (
+                <div className="quickview-diversification quick-view-margin-top">
+                  <DiversificationGraph
+                    graphData={graphData}
+                    width={"100"}
+                    height={"100"}
+                    color={"white"}
+                    showLegend={false}
+                    showLabel={false}
+                  />
+                </div>
+              ) : (
+                <div className="quickview-diversification">
+                  <div className="no-mini-graph"></div>
+                </div>
+              )}
+              <div className="quick-view-img-label quick-view-margin-left quick-view-margin-small-down">
+                <img className="label-img" src="./images/coin.svg"></img>
+                <h2 className="quick-view-container-labels">Diversification</h2>
+              </div>
+            </div>
+          </Link>
+          <Link>
+            <div className="quick-view-holder">
+              <div className="add-button" onClick={changeModalState}>
+                <h1 className="add-icon" onClick={changeModalState}>
+                  +
+                </h1>
+              </div>
+
+              <div className="quick-view-img-label quick-view-margin-small-down quick-view-margin-left">
+                <img
+                  className="label-img-smaller"
+                  src="./images/update.svg"
+                ></img>
+                <h2 className="quick-view-container-labels">Update</h2>
+              </div>
+            </div>
+          </Link>
+          {showAddModal ? <AddModal closeModal={changeModalState} /> : null}
         </div>
-      </div>
-      {showAddModal ? <AddModal closeModal={changeModalState} /> : null}
-    </div>
+      )}
+    </>
   );
 };
 

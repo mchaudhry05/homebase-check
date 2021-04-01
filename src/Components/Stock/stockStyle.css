@@ -74,3 +74,8 @@
     font-size: 3vw;
   }
 }
+
+.stock-skeleton-stock-section {
+  margin-top: -10px;
+  width: fit-content;
+}

@@ -16,7 +16,6 @@ const Header = () => {
 
   useEffect(() => {
     if (location === "/signin") {
-      // localStorage.removeItem("token");
       setHideSignIn(true);
     } else if (location === "/signup") {
       setHideSignUp(true);
@@ -30,7 +29,7 @@ const Header = () => {
     <div className="header-container">
       <div className="logo">
         <a href="/">
-          <h1>check</h1>
+          <h1 id="logo-name">check</h1>
         </a>
       </div>
       <div className="sign-in-out">

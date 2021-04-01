@@ -37,7 +37,7 @@ const DiversificationGraph = ({
           datasets: [
             {
               data: data,
-              borderColor: "white",
+              borderColor: "transparent",
               fill: true,
               backgroundColor: [
                 "#A2ADFF",
@@ -48,15 +48,15 @@ const DiversificationGraph = ({
                 "#34C9E1",
                 "#00AFCE",
                 "#FF7951",
-                "#F7AEF8", 
-                "#8093F1", 
-                "#FCFF4B", 
-                "#FFAD05", 
-                "#0EAD69", 
-                "#540D6E", 
-                "#F02D3A", 
-                "#000022", 
-                "#FCFDAF"
+                "#F7AEF8",
+                "#8093F1",
+                "#FCFF4B",
+                "#FFAD05",
+                "#0EAD69",
+                "#540D6E",
+                "#F02D3A",
+                "#000022",
+                "#FCFDAF",
               ],
               hoverOffset: 4,
             },
@@ -67,7 +67,6 @@ const DiversificationGraph = ({
             display: showLegend,
           },
           tooltips: {
-            // Disable the on-canvas tooltip
             enabled: showLabel,
           },
           responsive: true,

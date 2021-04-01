@@ -11,11 +11,13 @@ import SignUp from "../SignUp/SignUp";
 import SyncToFirebase from "../SyncToFirebase/SyncToFirebase";
 import { useEffect } from "react";
 import Dashboard from "../Dashboard/Dashboard";
+import Diversification from "../Diversification/Diversification";
+import StockOverview from "../StockOverview/StockOverview";
 
 /**
  * Authenticated is a component that checks to see
  * if the user has been authenticated and loads the
- * appropriate components is so
+ * appropriate components if so
  * @param {Components} children all of the components
  * that should be rendered after the user is logged in.
  */
@@ -56,9 +58,17 @@ const Athenticated = ({ children }) => {
       <Route exact path="/signin" render={() => <SignIn />}></Route>
       <Route exact path="/signup" render={() => <SignUp />}></Route>
       <Route exact path="/dashboard" render={() => <Home />}></Route>
-      <Route exact path="/overview" render={() => <Home />}></Route>
-      {/* <Route exact path="/dashboard" render={() => <Dashboard setDiversificationGraphData={()=>{console.log("ok")}}/>}></Route>
-      <Route exact path="/overview" render={() => <Overview />}></Route> */}
+      <Route exact path="/overview" render={() => <Overview />}></Route>
+      <Route
+        exact
+        path="/diversification"
+        render={() => <Diversification />}
+      ></Route>
+      <Route
+        exact
+        path="/stockoverview/:stockname"
+        render={() => <StockOverview />}
+      ></Route>
     </Router>
   );
 };

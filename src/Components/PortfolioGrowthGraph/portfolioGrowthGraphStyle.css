@@ -1,16 +1,15 @@
 .graph-container {
   display: block;
-  width: 400px;
+  width: 800px;
   height: fit-content;
-  border-radius: 30px;
+  /* border-radius: 30px; */
   background-color: white;
 }
 
 .myChart {
-  width: 380px;
-  height: 380px;
-  /* border-radius: 30px; */
-  background-color: red;
+  width: 800px;
+  height: 400px;
+  background-color: white;
 }
 .margin-top {
   margin-top: 20px;
@@ -19,8 +18,6 @@
 .chartjs-render-monitor {
   background-color: white;
   cursor: pointer;
-  width: fit-content;
-  /* border-radius: 30px; */
 }
 
 .range-form-container {

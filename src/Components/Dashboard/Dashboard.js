@@ -7,8 +7,8 @@ import {
   Entity,
 } from "homebase-react";
 import { useEffect, useState } from "react";
-import { Redirect } from "react-router-dom";
 import QuickView from "../QuickView/QuickView";
+import SkeletonStockContainer from "../SkeletonComponents/SkeletonStockContainer";
 import StockContainer from "../StockContainer/StockContainer";
 import "./dashboardStyle.css";
 
@@ -18,13 +18,12 @@ import "./dashboardStyle.css";
  */
 const Dashboard = ({ setDiversificationGraphData }) => {
   const [currentUser] = useEntity({ identity: "currentUser" });
-  const [name, setName] = useState("");
+  const [display, setDisplay] = useState(true);
   const [graphData, setGraphData] = useState();
   const [allStocks] = useQuery({
     $find: "stock",
     $where: { stock: { user: currentUser.get("id") } },
   });
-
 
   useEffect(() => {
     let diversification = new Map();
@@ -44,48 +43,32 @@ const Dashboard = ({ setDiversificationGraphData }) => {
       setGraphData(diversification);
       setDiversificationGraphData(diversification);
     }
-
-
   }, [allStocks]);
 
-  // let name = ""; 
-  // if(localStorage.removeItem("token")){
-  //   if(currentUser.get("name").indexOf(" ") === -1){
-  //     setName(currentUser.get("name"));
-  //   }else{
-  //     setName(currentUser.get("name").substring(0, currentUser.get("name").indexOf(" ")));
-  //   }
-  // }
+  setTimeout(() => {
+    setDisplay(false);
+  }, 1000);
 
-  // useEffect(() =>{
-
-  // }, [name])
-  // console.log(localStorage.getItem("token"))
-  // const name = currentUser.get("name").substring(0, currentUser.get("name").indexOf(" "))
-  // if (localStorage.getItem("token") !== "passed"){
-  //   return <Redirect to="/"></Redirect>
-  // }
   return (
     <div className="dashboard-container">
-      <h1 className="name-label">
-        Hello,{" "}
-        {currentUser.get("name")}
-        !
-      </h1>
-      <QuickView graphData={graphData} />
-      
-      {
-        allStocks.length > 0 ? 
-        <StockContainer sectorSelected={"All"} previousSector={"All"} />
-        :
-        <div className="no-stocks-container">
-          <img className="no-stocks-img" src="./Group 30.svg"></img>
-        </div>
-      
-      }
+      <h1 className="name-label">Hello, {currentUser.get("name")}!</h1>
 
-      
-      
+      <QuickView graphData={graphData} />
+      {display && <SkeletonStockContainer />}
+      {!display > 0 && (
+        <>
+          {allStocks.length > 0 ? (
+            <StockContainer sectorSelected={"All"} previousSector={"All"} />
+          ) : (
+            <div className="no-stocks-container">
+              <img
+                className="no-stocks-img"
+                src="./images/no-stocks-2.svg"
+              ></img>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

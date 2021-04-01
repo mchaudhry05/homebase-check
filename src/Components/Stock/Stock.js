@@ -11,9 +11,9 @@ import "./stockStyle.css";
  */
 const Stock = ({ tickerSymbol, website, name, currentPrice }) => {
   return (
-    <div className="stock">
-      {currentPrice && currentPrice.length == 2 ? (
-        <>
+    <>
+      {currentPrice && currentPrice.length === 2 ? (
+        <div className="stock">
           <div className="logo-img-container">
             {website ? (
               <img
@@ -42,11 +42,15 @@ const Stock = ({ tickerSymbol, website, name, currentPrice }) => {
               ${currentPrice[0]}
             </h2>
           </div>
-        </>
+        </div>
       ) : (
-        <h2> Loading ...</h2>
+        <>
+          <div className="stock-skeleton animate"></div>
+          <div className="stock-skeleton animate"></div>
+          <div className="stock-skeleton animate"></div>
+        </>
       )}
-    </div>
+    </>
   );
 };
 

@@ -34,7 +34,7 @@
   box-sizing: border-box;
   outline: none !important;
   border: white 2px;
-  box-shadow: 2px 2px 5px grey;
+  box-shadow: 2px 2px 5px #e6e6e6;
   background-color: white;
 }
 

@@ -2,15 +2,15 @@ import "./editFormStyle.css";
 import { useState } from "react";
 import { useTransact } from "homebase-react";
 /**
- * 
- * EditForm is a component that represents the edit form 
- * allowing the user to update the number of stocks they hold 
+ *
+ * EditForm is a component that represents the edit form
+ * allowing the user to update the number of stocks they hold
  * for that stock and the avg cost of each stock.
- * @param {Entity} stock is the stock entity which the user wants 
- * to update  
- * @param {Function} setShowEditFrom is the function that hides and 
+ * @param {Entity} stock is the stock entity which the user wants
+ * to update
+ * @param {Function} setShowEditFrom is the function that hides and
  * displays te EditForm
- * 
+ *
  */
 const EditForm = ({ stock, setShowEditFrom }) => {
   const [message, setMessage] = useState(
@@ -34,12 +34,12 @@ const EditForm = ({ stock, setShowEditFrom }) => {
   const [transact] = useTransact();
 
   /**
-   * 
-   * deleteStock deletes the stock from the user's 
+   *
+   * deleteStock deletes the stock from the user's
    * portfolio
-   * @param {Event} e is the event that triggered the 
+   * @param {Event} e is the event that triggered the
    * function
-   * 
+   *
    */
   const deleteStock = (e) => {
     e.preventDefault();
@@ -54,12 +54,12 @@ const EditForm = ({ stock, setShowEditFrom }) => {
   };
 
   /**
-   * 
-   * updatePortfolio updates the holding of said stock 
+   *
+   * updatePortfolio updates the holding of said stock
    * in the user's portfolio
-   * @param {Event} e is the event that triggered the 
+   * @param {Event} e is the event that triggered the
    * function
-   * 
+   *
    */
   const updatePortfolio = (e) => {
     e.preventDefault();

@@ -13,7 +13,6 @@ import { useState } from "react";
 const Check = () => {
   const [currentUser] = useEntity({ identity: "currentUser" });
   const [diversificationGraphData, setDiversificationGraphData] = useState();
-  console.log(diversificationGraphData);
   return (
     <Router>
       <LoggedInHeader />

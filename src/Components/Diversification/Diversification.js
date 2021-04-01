@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useQuery, useEntity } from "homebase-react";
@@ -66,7 +66,7 @@ const Diversification = () => {
    * the stocks that the user owns
    */
   useEffect(() => {
-    let stockPrices = []; //change name of this 
+    let stockPrices = []; //change name of this
     stocksFound.map((stock) => stockPrices.push(stock.get("tickerSymbol")));
     setListOfStockPrices(stockPrices);
   }, [stocksFound.length, allStocks.length]);
@@ -117,83 +117,85 @@ const Diversification = () => {
     setStockPrices(stockPrices);
   };
 
+  if (localStorage.getItem("token") !== "passed!") {
+    return <Redirect to="/"></Redirect>;
+  }
+
   return (
     <div className="diversification-container">
       <div className="section-header-container">
         <h1 className="section-name">Diversification</h1>
         <Link to="/dashboard">
           <div className="back-button">
-            <h1 className="back-button">Back</h1>
+            <img className="back-img" src="./images/back.svg"></img>
           </div>
         </Link>
       </div>
-      {
-        allStocks.length > 0 ?
-  
+      {allStocks.length > 0 ? (
         <>
-      <div className="diversificiation-graph-container">
-        <div>
-          <DiversificationGraph
-            graphData={graphData}
-            width={"380"}
-            height={"380"}
-            color={"#f9fafe"}
-            showLegend={true}
-            sectorSelected={sectorSelected}
-            setSectorSelected={setSectorSelected}
-            previousSector={previousSector}
-            setPreviousSector={setPreviousSector}
-            showLabel={true}
-          />
-        </div>
-      </div>
-      <div className="sector-stocks-container">
-        <h1>{sectorSelected + " Stocks"}</h1>
+          <div className="diversificiation-graph-container">
+            <div>
+              <DiversificationGraph
+                graphData={graphData}
+                width={"380"}
+                height={"380"}
+                color={"#f9fafe"}
+                showLegend={true}
+                sectorSelected={sectorSelected}
+                setSectorSelected={setSectorSelected}
+                previousSector={previousSector}
+                setPreviousSector={setPreviousSector}
+                showLabel={true}
+              />
+            </div>
+          </div>
+          <div className="sector-stocks-container">
+            <h1>{sectorSelected + " Stocks"}</h1>
 
-        {allStocks.length !== 0 ? (
-          <>
-            {sectorSelected === previousSector ? (
+            {allStocks.length !== 0 ? (
               <>
-                {allStocks.map((stock, index) => (
-                  <Stock
-                    key={stock.get("id")}
-                    name={stock.get("name")}
-                    tickerSymbol={stock.get("tickerSymbol")}
-                    website={stock.get("website")}
-                    currentPrice={stockPrices[index]}
-                  />
-                ))}
+                {sectorSelected === previousSector ? (
+                  <>
+                    {allStocks.map((stock, index) => (
+                      <Stock
+                        key={stock.get("id")}
+                        name={stock.get("name")}
+                        tickerSymbol={stock.get("tickerSymbol")}
+                        website={stock.get("website")}
+                        currentPrice={stockPrices[index]}
+                      />
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {allStocks
+                      .filter((stock) => stock.get("sector") === sectorSelected)
+                      .map((filteredStock) => (
+                        <Stock
+                          key={filteredStock.get("id")}
+                          name={filteredStock.get("name")}
+                          tickerSymbol={filteredStock.get("tickerSymbol")}
+                          website={filteredStock.get("website")}
+                          currentPrice={
+                            stockPrices[allStocks.indexOf(filteredStock)]
+                          }
+                        />
+                      ))}
+                  </>
+                )}
               </>
             ) : (
-              <>
-                {allStocks
-                  .filter((stock) => stock.get("sector") === sectorSelected)
-                  .map((filteredStock) => (
-                    // console.log(filteredStock.get("name"))
-                    <Stock
-                      key={filteredStock.get("id")}
-                      name={filteredStock.get("name")}
-                      tickerSymbol={filteredStock.get("tickerSymbol")}
-                      website={filteredStock.get("website")}
-                      currentPrice={[100, 200]}
-                    />
-                  ))}
-              </>
+              <h1>Loading</h1>
             )}
-          </>
-        ) : (
-          <h1>Loading</h1>
-        )}
-      </div>
-      </>
-      :
-      <div className="no-stocks-container">
-        <img className="no-graph-img"src="./Group 31.svg"></img>
-      </div>
-    }
+          </div>
+        </>
+      ) : (
+        <div className="no-stocks-container">
+          <img className="no-graph-img" src="./images/no-stocks.svg"></img>
+        </div>
+      )}
       <div className="padding"></div>
     </div>
-    
   );
 };
 

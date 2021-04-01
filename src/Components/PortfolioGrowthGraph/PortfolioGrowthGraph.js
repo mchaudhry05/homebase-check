@@ -39,7 +39,6 @@ const PortfolioGrowthGraph = ({ tickerSymbols, shares }) => {
       axios
         .request(options)
         .then(function (response) {
-          console.log(response.data);
           parseGraphData(response.data);
         })
         .catch(function (error) {
@@ -63,7 +62,6 @@ const PortfolioGrowthGraph = ({ tickerSymbols, shares }) => {
     for (let i = 0; i < tickerSymbols.length; i++) {
       stocks.push(data[tickerSymbols[i]].close);
       timeStamps.push(data[tickerSymbols[i]].timestamp);
-
       maxLength = Math.max(maxLength, data[tickerSymbols[i]].timestamp.length);
     }
 
@@ -153,9 +151,6 @@ const PortfolioGrowthGraph = ({ tickerSymbols, shares }) => {
    * of the portfolio growth
    */
   useEffect(() => {
-
-
-    
     const ctx = document.getElementById("myChart");
 
     if (myChart) {
@@ -163,48 +158,47 @@ const PortfolioGrowthGraph = ({ tickerSymbols, shares }) => {
     }
 
     let draw = Chart.controllers.line.prototype.draw;
-Chart.controllers.line = Chart.controllers.line.extend({
-    draw: function() {
+    Chart.controllers.line = Chart.controllers.line.extend({
+      draw: function () {
         draw.apply(this, arguments);
         let ctx = this.chart.chart.ctx;
         let _stroke = ctx.stroke;
-        ctx.stroke = function() {
-            ctx.save();
-            ctx.shadowColor = '#000000';
-            ctx.shadowBlur = 0;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 0;
-            _stroke.apply(this, arguments)
-            ctx.restore();
+        ctx.stroke = function () {
+          ctx.save();
+          ctx.shadowColor = "#000000";
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+          _stroke.apply(this, arguments);
+          ctx.restore();
+        };
+      },
+    });
+
+    Chart.defaults.LineWithLine = Chart.defaults.line;
+    Chart.controllers.LineWithLine = Chart.controllers.line.extend({
+      draw: function (ease) {
+        Chart.controllers.line.prototype.draw.call(this, ease);
+
+        if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+          var activePoint = this.chart.tooltip._active[0],
+            ctx = this.chart.ctx,
+            x = activePoint.tooltipPosition().x,
+            topY = this.chart.scales["y-axis-0"].top,
+            bottomY = this.chart.scales["y-axis-0"].bottom;
+
+          // draw vertical line
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(x, topY);
+          ctx.lineTo(x, bottomY);
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = "black";
+          ctx.stroke();
+          ctx.restore();
         }
-    }
-});
-
-Chart.defaults.LineWithLine = Chart.defaults.line;
-Chart.controllers.LineWithLine = Chart.controllers.line.extend({
-   draw: function(ease) {
-      Chart.controllers.line.prototype.draw.call(this, ease);
-
-      if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
-         var activePoint = this.chart.tooltip._active[0],
-             ctx = this.chart.ctx,
-             x = activePoint.tooltipPosition().x,
-             topY = this.chart.scales['y-axis-0'].top,
-             bottomY = this.chart.scales['y-axis-0'].bottom;
-
-         // draw line
-         ctx.save();
-         ctx.beginPath();
-         ctx.moveTo(x, topY);
-         ctx.lineTo(x, bottomY);
-         ctx.lineWidth = 2;
-         ctx.strokeStyle = 'black';
-         ctx.stroke();
-         ctx.restore();
-      }
-   }
-});
-
+      },
+    });
 
     myChart = new Chart(ctx, {
       type: "LineWithLine",
@@ -245,17 +239,17 @@ Chart.controllers.LineWithLine = Chart.controllers.line.extend({
         legend: {
           display: false,
         },
-        elements:{
+        elements: {
           point: {
-          radius: 0,
-        }
-      },
+            radius: 0,
+          },
+        },
         responsive: true,
-        
+        responsiveAnimationDuration: 1,
 
         maintainAspectRatio: true,
         tooltips: {
-           mode:"nearest",
+          mode: "nearest",
           intersect: false,
           callbacks: {
             label: function (tooltipItem) {
@@ -265,8 +259,6 @@ Chart.controllers.LineWithLine = Chart.controllers.line.extend({
         },
       },
     });
-
-  
   }, [graphData, myChart]);
 
   /**
@@ -277,11 +269,10 @@ Chart.controllers.LineWithLine = Chart.controllers.line.extend({
   const changeRange = (e) => {
     document.getElementById("chart-holder").innerHTML = "&nbsp;";
     document.getElementById("chart-holder").innerHTML =
-      '<canvas id="myChart" width="400px" height="400px"></canvas>';
+      '<canvas id="myChart" width="800px" height="200px"></canvas>';
     var ctx = document.getElementById("myChart").getContext("2d");
 
     let range = document.getElementById("range").selectedOptions[0].value;
-    console.log(range);
     if (range === "1d") {
       setIntervals("5m");
     } else if (range === "5d") {
@@ -302,9 +293,15 @@ Chart.controllers.LineWithLine = Chart.controllers.line.extend({
 
   return (
     <div className="graph-container">
-      <div className="label-container margin-top">
-        <h1 className="label">Portfolio Growth</h1>
+      <div id="chart-holder">
+        <canvas
+          id="myChart"
+          className="margin-top"
+          width="800px"
+          height="200px"
+        ></canvas>
       </div>
+
       <div className="range-form-container">
         <select id="range" name="range">
           <option value="1d">1D</option>
@@ -320,9 +317,6 @@ Chart.controllers.LineWithLine = Chart.controllers.line.extend({
           className="apply-button"
           onClick={changeRange}
         ></input>
-      </div>
-      <div id="chart-holder">
-        <canvas id="myChart" width="400px" height="400px"></canvas>
       </div>
     </div>
   );
