@@ -1,7 +1,5 @@
-# homebase-check
-
 <div align="center">
- <h1>check</h1>
+ <h1>homebase-check</h1>
  <img width="200px" height="200px" src="./public/logo.png" />
 </div>
 
