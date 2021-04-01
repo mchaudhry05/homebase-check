@@ -2,7 +2,7 @@
 
 <div align="center">
  <h1>check</h1>
- <img width="300px" height="300px" src="./public/logo.png" />
+ <img width="200px" height="200px" src="./public/logo.png" />
 </div>
 
 # About Check 
