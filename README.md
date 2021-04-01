@@ -1,5 +1,5 @@
+# homebase-check
 <div align="center">
- <h1>homebase-check</h1>
  <img width="200px" height="200px" src="./public/logo.png" />
 </div>
 
@@ -17,8 +17,8 @@ happens through the use of Homebase's API calls. This resulted in me just having
 to interact with my app and where things should be placed on the screen because I knew with Homebase's API calls I would
 be able to easily access my data and put it where I needed it. 
 
+# check snapshot
 <div align="center">
- <h1>check snapshots</h1>
  <img src="./check-demo/1.png" />
  <img src="./check-demo/2.png" />
  <img src="./check-demo/3.png" />
